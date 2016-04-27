@@ -20,22 +20,21 @@ import java.util.Scanner;
  * @version Dé Céadaoin, 27ú Aibreán 2016
  * @since Déardaoin, 21ú Aibreán 2016
  */
-public class TestClient implements Notifier
+public class SimSigClient implements Notifier
 {
 
-// -------------------------------------------- TestClient Class ---------------
+// ------------------------------------------ SimSigClient Class ---------------
 
   private ClientInterface client;
-  private static Scanner keyboard;
 
-// -------------------------------------------- TestClient Class ---------------
+// ------------------------------------------ SimSigClient Class ---------------
 
-  public TestClient(String hostName, int port, int debug)
+  public SimSigClient(String hostName, int port, int debug)
   {
     client = new ClientInterface(hostName, port, debug, this);
   } // End ‘SimSigClient(String, int, int)’ Constructor
 
-// -------------------------------------------- TestClient Class ---------------
+// ------------------------------------------ SimSigClient Class ---------------
 
   /**
    * Prints SimSig messages verbatim when received
@@ -48,31 +47,7 @@ public class TestClient implements Notifier
       parseMessage(message);
   } // End ‘alert()’ method
 
-// -------------------------------------------- TestClient Class ---------------
-
-  void launch()
-  {
-    client.handshake();
-
-    if (client.connect("me"))
-    {
-      client.subscribe("/topic/TD_ALL_SIG_AREA", true);
-
-      boolean quit = false;
-      System.out.println("Type ‘q’ to quit:");
-
-      while (!quit)
-        if (keyboard.nextLine().charAt(0) == 'q')
-          quit = true;
-
-      client.unsubscribe(false);
-      client.disconnect();
-      client.close();
-    } // End if
-
-  } // End ‘launch()’ Method
-
-// -------------------------------------------- TestClient Class ---------------
+// ------------------------------------------ SimSigClient Class ---------------
 
   private static void parseMessage(String message)
   {
@@ -121,7 +96,7 @@ public class TestClient implements Notifier
 
   } // End ‘parseMessage(String)’ Method
 
-// -------------------------------------------- TestClient Class ---------------
+// ------------------------------------------ SimSigClient Class ---------------
 
   private static HashMap<String, String> parseParameters(String message)
   {
@@ -172,75 +147,8 @@ public class TestClient implements Notifier
 
   } // End ‘parseHeaders(String)’ Method
 
-// -------------------------------------------- TestClient Class ---------------
+// ------------------------------------------ SimSigClient Class ---------------
 
-  /**
-   * Sets up and initialises a test STOMP client, sends a request to port 51515
-   * for a connection, receives test messages and then shuts itself down.
-   *
-   * @param args Not used (ignored).
-   */
-  public static void main(String[] args)
-  {
-
-    keyboard = new Scanner(System.in);
-    int port;
-    System.out.print("Which port is the SimSig server on? [51515] ");
-    String portString = keyboard.nextLine();
-    if (portString.equals(""))
-      port = 51515;
-    else
-    {
-      try
-      {
-        port = Integer.parseInt(portString);
-      } // End try
-      catch (NumberFormatException nfe)
-      {
-        Printer.printError(portString + " is not a valid port number."
-          + " Defaulting to port 51515.");
-          port = 51515;
-      } // End ‘NumberFormatException’ catch
-    } // End else
-
-    int debug;
-    System.out.print(
-      "What level of messages do you want to display?\n" +
-      "Debug → " + Constants.DEBUG + "\n" +
-      "Info → " + Constants.INFO + "\n" +
-      "Warning → " + Constants.WARNING + "\n" +
-      "Error → " + Constants.ERROR + "\n" +
-      "None → " + Constants.NONE + "\n" +
-      "[Warning] ");
-    String debugString = keyboard.nextLine();
-    if (debugString.equals(""))
-      debug = Constants.WARNING;
-    else
-    {
-      try
-      {
-        debug = Integer.parseInt(debugString);
-      } // End try
-      catch (NumberFormatException nfe)
-      {
-        Printer.printError(debugString + " is not a valid number."
-          + " Defaulting to warning message level.");
-          debug = Constants.WARNING;
-      } // End ‘NumberFormatException’ catch
-    } // End else
-
-    System.out.print(
-      "What is the address/host name of the SimSig server? [127.0.0.1] ");
-    String hostName = keyboard.nextLine();
-    if (hostName.equals(""))
-      hostName = "127.0.0.1";
-
-    (new TestClient(hostName, port, debug)).launch();
-
-  } // End ‘main(String[] args)’ Method
-
-// -------------------------------------------- TestClient Class ---------------
-
-} // End ‘TestClient’ Class
+} // End ‘SimSigClient’ Class
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
