@@ -26,13 +26,14 @@ public class TestClient implements Notifier
 // -------------------------------------------- TestClient Class ---------------
 
   private ClientInterface client;
+  private static Scanner keyboard;
 
 // -------------------------------------------- TestClient Class ---------------
 
-  public TestClient()
+  public TestClient(String hostName, int port, int debug)
   {
-    client = new ClientInterface("127.0.0.1", 51515, Constants.DEBUG, this);
-  } // End ‘SimSigClient()’ Constructor
+    client = new ClientInterface(hostName, port, debug, this);
+  } // End ‘SimSigClient(String, int, int)’ Constructor
 
 // -------------------------------------------- TestClient Class ---------------
 
@@ -51,14 +52,11 @@ public class TestClient implements Notifier
 
   void launch()
   {
-    Scanner keyboard = new Scanner(System.in);
     client.handshake();
 
     if (client.connect("me"))
     {
       client.subscribe("/topic/TD_ALL_SIG_AREA", true);
-
-      try{Thread.currentThread().wait(1000);}catch(Throwable t){}
 
       boolean quit = false;
       System.out.println("Type ‘q’ to quit:");
@@ -184,7 +182,61 @@ public class TestClient implements Notifier
    */
   public static void main(String[] args)
   {
-    (new TestClient()).launch();
+
+    keyboard = new Scanner(System.in);
+    int port;
+    System.out.print("Which port is the SimSig server on? [51515] ");
+    String portString = keyboard.nextLine();
+    if (portString.equals(""))
+      port = 51515;
+    else
+    {
+      try
+      {
+        port = Integer.parseInt(portString);
+      } // End try
+      catch (NumberFormatException nfe)
+      {
+        Printer.printError(portString + " is not a valid port number."
+          + " Defaulting to port 51515.");
+          port = 51515;
+      } // End ‘NumberFormatException’ catch
+    } // End else
+
+    int debug;
+    System.out.print(
+      "What level of messages do you want to display?\n" +
+      "Debug → " + Constants.DEBUG + "\n" +
+      "Info → " + Constants.INFO + "\n" +
+      "Warning → " + Constants.WARNING + "\n" +
+      "Error → " + Constants.ERROR + "\n" +
+      "None → " + Constants.NONE + "\n" +
+      "[Warning] ");
+    String debugString = keyboard.nextLine();
+    if (debugString.equals(""))
+      debug = Constants.WARNING;
+    else
+    {
+      try
+      {
+        debug = Integer.parseInt(debugString);
+      } // End try
+      catch (NumberFormatException nfe)
+      {
+        Printer.printError(debugString + " is not a valid number."
+          + " Defaulting to warning message level.");
+          debug = Constants.WARNING;
+      } // End ‘NumberFormatException’ catch
+    } // End else
+
+    System.out.print(
+      "What is the address/host name of the SimSig server? [127.0.0.1] ");
+    String hostName = keyboard.nextLine();
+    if (hostName.equals(""))
+      hostName = "127.0.0.1";
+
+    (new TestClient(hostName, port, debug)).launch();
+
   } // End ‘main(String[] args)’ Method
 
 // -------------------------------------------- TestClient Class ---------------
