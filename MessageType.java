@@ -11,7 +11,7 @@ package simsigGatewayInterface;
  * @version Dé Céadaoin, 27ú Aibreán 2016
  * @since Dé Céadaoin, 27ú Aibreán 2016
  */
-enum MessageType
+public enum MessageType
 {
 
 // -------------------------------------------- MessageType Enum ---------------

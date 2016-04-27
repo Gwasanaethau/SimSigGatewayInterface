@@ -12,7 +12,7 @@ import java.util.HashMap;
  * @version Dé Céadaoin, 27ú Aibreán 2016
  * @since Dé Céadaoin, 27ú Aibreán 2016
  */
-class SimSigMessage
+public class SimSigMessage
 {
 
 // ----------------------------------------- SimSigMessage Class ---------------
@@ -30,8 +30,8 @@ class SimSigMessage
 
 // ----------------------------------------- SimSigMessage Class ---------------
 
-  MessageType getType(){ return type; }
-  HashMap<String, String> getParameters(){ return parameters; }
+  public MessageType getType(){ return type; }
+  public HashMap<String, String> getParameters(){ return parameters; }
 
 // ----------------------------------------- SimSigMessage Class ---------------
 
