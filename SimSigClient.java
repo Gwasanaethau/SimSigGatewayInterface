@@ -2,11 +2,9 @@
 
 package simsigGatewayInterface;
 import strampáil.ClientInterface;
-import strampáil.Constants;
 import strampáil.Notifier;
 import strampáil.Printer;
 import java.util.HashMap;
-import java.util.Scanner;
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
@@ -25,31 +23,52 @@ public class SimSigClient implements Notifier
 
 // ------------------------------------------ SimSigClient Class ---------------
 
-  private ClientInterface client;
-
-// ------------------------------------------ SimSigClient Class ---------------
-
-  public SimSigClient(String hostName, int port, int debug)
-  {
-    client = new ClientInterface(hostName, port, debug, this);
-  } // End ‘SimSigClient(String, int, int)’ Constructor
+  private ClientInterface clientInterface;
+  private Harness harness;
 
 // ------------------------------------------ SimSigClient Class ---------------
 
   /**
-   * Prints SimSig messages verbatim when received
-   * by the {@link ClientInterface}.
+   * Creates a SimSig client that listens for and parses SimSig messages from
+   * the SimSig server.
+   */
+  public SimSigClient(
+    String address, int port, int debug, String stompHostName, Harness harness)
+  {
+
+    this.harness = harness;
+    clientInterface = new ClientInterface(address, port, debug, this);
+    clientInterface.handshake();
+
+    if (clientInterface.connect(stompHostName))
+    {
+      clientInterface.subscribe("/topic/TD_ALL_SIG_AREA", true);
+      harness.connected();
+      // SimSig loader 4.5.9 doesn’t send a RECEIPT for UNSUBSCRIBE (it should!)
+      clientInterface.unsubscribe(false);
+      // SimSig loader 4.5.9 complains about an access violation when
+      // receiving a DISCONNECT frame. Not much can be done about it at the mo.
+      clientInterface.disconnect();
+      clientInterface.close();
+    } // End if
+
+  } // End ‘SimSigClient(String, int, int, String, Harness)’ Constructor
+
+// ------------------------------------------ SimSigClient Class ---------------
+
+  /**
+   * Parses SimSig messages when received by the {@link ClientInterface}.
    */
   public void alert()
   {
-    String message = client.retrieveMessage();
+    String message = clientInterface.retrieveMessage();
     if (message != null)
-      parseMessage(message);
+      harness.sendMessage(parseMessage(message));
   } // End ‘alert()’ method
 
 // ------------------------------------------ SimSigClient Class ---------------
 
-  private static void parseMessage(String message)
+  private static SimSigMessage parseMessage(String message)
   {
 
     MessageType type;
@@ -73,7 +92,7 @@ public class SimSigClient implements Notifier
       {
         Printer.printError(
           "Unable to understand SimSig message type: " + messageType);
-        return;
+        return null;
       }
 
       Printer.printInfo(type.name() + " message received.");
@@ -84,15 +103,17 @@ public class SimSigClient implements Notifier
       else
       {
         Printer.printError("Invalid SimSig message syntax.");
-        return;
+        return null;
       }
 
     } // End if
     else
     {
       Printer.printError("‘" + message + "’ is not valid JSON syntax.");
-      return;
+      return null;
     } // End else
+
+    return new SimSigMessage(type, parameters);
 
   } // End ‘parseMessage(String)’ Method
 

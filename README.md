@@ -22,4 +22,4 @@ No, most definitely not! I merely use their products (and fun products they are)
 
 ### Current Status ###
 
-The SimSig messages are parsed into a message type and a list of parameters. These can be seen on the CLI if the debug printer is set to DEBUG level.
+The SimSig messages are parsed into a message type and a list of parameters. These can be seen on the CLI if the debug printer is set to DEBUG level, or if the Harness interface is implemented.
