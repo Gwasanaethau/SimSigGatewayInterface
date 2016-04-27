@@ -18,4 +18,4 @@ That depends – this is very much ‘pre-α’ at the moment. It is very unlike
 
 ### Current Status ###
 
-At the moment, the messages are just printed to the CLI as is (i.e. in their JSON format).
+The SimSig messages are parsed into a message type and a list of parameters. These can be seen on the CLI if the debug printer is set to DEBUG level.
