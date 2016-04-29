@@ -10,7 +10,7 @@ package simsigGatewayInterface;
  * must implement this interface in order to retrieve messages.
  *
  * @author Mark David Pokorny
- * @version Dé Céadaoin, 27ú Aibreán 2016
+ * @version Dé Sathairn, 30ú Aibreán 2016
  * @since Dé Céadaoin, 27ú Aibreán 2016
  */
 public interface Harness
@@ -31,7 +31,7 @@ public interface Harness
    * This method is called once the {@link SimSigClient} has parsed a
    * {@link SimSigMessage} from the server.
    */
-  void sendMessage(SimSigMessage message);
+  void transferMessage(SimSigMessage message);
 
 // ------------------------------------------- Harness Interface ---------------
 

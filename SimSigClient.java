@@ -15,7 +15,7 @@ import java.util.HashMap;
  * Interface Gateway</a>.
  *
  * @author Mark David Pokorny
- * @version Dé Céadaoin, 27ú Aibreán 2016
+ * @version Dé Sathairn, 30ú Aibreán 2016
  * @since Déardaoin, 21ú Aibreán 2016
  */
 public class SimSigClient implements Notifier
@@ -63,7 +63,7 @@ public class SimSigClient implements Notifier
   {
     String message = clientInterface.retrieveMessage();
     if (message != null)
-      harness.sendMessage(parseMessage(message));
+      harness.transferMessage(parseMessage(message));
   } // End ‘alert()’ method
 
 // ------------------------------------------ SimSigClient Class ---------------
@@ -74,11 +74,9 @@ public class SimSigClient implements Notifier
     MessageType type;
     HashMap<String, String> parameters;
 
-    // Finite automata state 1:
     if (message.startsWith("{\"") && message.endsWith("\"}}"))
     {
 
-      // Finite autotmata state 3 (NB: state 2 removed!):
       int headerFinalIndex = message.indexOf("\"", 2);
       String messageType = message.substring(2, headerFinalIndex);
 
@@ -98,7 +96,6 @@ public class SimSigClient implements Notifier
       Printer.printInfo(type.name() + " message received.");
 
       if (message.startsWith("\":{\"", headerFinalIndex))
-        // Finite autotmata state 4:
         parameters = parseParameters(message.substring(headerFinalIndex + 4));
       else
       {
@@ -122,7 +119,6 @@ public class SimSigClient implements Notifier
   private static HashMap<String, String> parseParameters(String message)
   {
 
-    // Finite automata state 4:
     HashMap<String, String> parameters = new HashMap<String, String>();
     String key, value;
     int keyEnd = 0;
@@ -134,7 +130,6 @@ public class SimSigClient implements Notifier
 
       if (message.startsWith("\":\"", keyEnd))
       {
-        // Finite automata state 5:
         keyEnd += 3;
         valueEnd = message.indexOf("\"", keyEnd);
         value = message.substring(keyEnd, valueEnd);
@@ -144,12 +139,10 @@ public class SimSigClient implements Notifier
 
         if (message.startsWith("\",\"", valueEnd))
         {
-          // Finite automata state 4:
           valueEnd += 3;
           continue;
         } // End if
         else if (message.startsWith("\"}}", valueEnd))
-          // Finite automata state END:
           return parameters;
         else
         {
