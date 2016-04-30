@@ -38,18 +38,20 @@ public class SimSigClient implements Notifier
 
     this.harness = harness;
     clientInterface = new ClientInterface(address, port, debug, this);
-    clientInterface.handshake();
 
-    if (clientInterface.connect(stompHostName))
+    if (clientInterface.handshake())
     {
-      clientInterface.subscribe("/topic/TD_ALL_SIG_AREA", true);
-      harness.connected();
-      // SimSig loader 4.5.9 doesn’t send a RECEIPT for UNSUBSCRIBE (it should!)
-      clientInterface.unsubscribe(false);
-      // SimSig loader 4.5.9 complains about an access violation when
-      // receiving a DISCONNECT frame. Not much can be done about it at the mo.
-      clientInterface.disconnect();
-      clientInterface.close();
+      if (clientInterface.connect(stompHostName))
+      {
+        clientInterface.subscribe("/topic/TD_ALL_SIG_AREA", true);
+        harness.connected();
+        // SimSig loader 4.5.9 doesn’t send a RECEIPT for UNSUBSCRIBE (it should!)
+        clientInterface.unsubscribe(false);
+        // SimSig loader 4.5.9 complains about an access violation when
+        // receiving a DISCONNECT frame. Not much can be done about it at the mo.
+        clientInterface.disconnect();
+        clientInterface.close();
+      } // End if
     } // End if
 
   } // End ‘SimSigClient(String, int, int, String, Harness)’ Constructor
