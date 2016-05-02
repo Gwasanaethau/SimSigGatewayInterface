@@ -10,7 +10,7 @@ package simsigGatewayInterface;
  * must implement this interface in order to retrieve messages.
  *
  * @author Mark David Pokorny
- * @version Dé Sathairn, 30ú Aibreán 2016
+ * @version Dé Lúain, 2ú Bealtaine 2016
  * @since Dé Céadaoin, 27ú Aibreán 2016
  */
 public interface Harness
@@ -22,8 +22,11 @@ public interface Harness
    * This method is called once the {@link SimSigClient} has connected to the
    * server and subscribed to the message feed. Returning from this method
    * starts the process of unsubscribing and disconnecting from the server.
+   *
+   * @param success Flags whether the connection procedure
+   * was successful in establishing a connection.
    */
-  void connected();
+  void connected(boolean success);
 
 // ------------------------------------------- Harness Interface ---------------
 

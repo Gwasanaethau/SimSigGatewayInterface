@@ -15,7 +15,7 @@ import java.util.HashMap;
  * Interface Gateway</a>.
  *
  * @author Mark David Pokorny
- * @version Dé Sathairn, 30ú Aibreán 2016
+ * @version Dé Lúain, 2ú Bealtaine 2016
  * @since Déardaoin, 21ú Aibreán 2016
  */
 public class SimSigClient implements Notifier
@@ -44,7 +44,7 @@ public class SimSigClient implements Notifier
       if (clientInterface.connect(stompHostName))
       {
         clientInterface.subscribe("/topic/TD_ALL_SIG_AREA", true);
-        harness.connected();
+        harness.connected(true);
         // SimSig loader 4.5.9 doesn’t send a RECEIPT for UNSUBSCRIBE (it should!)
         clientInterface.unsubscribe(false);
         // SimSig loader 4.5.9 complains about an access violation when
@@ -52,7 +52,11 @@ public class SimSigClient implements Notifier
         clientInterface.disconnect();
         clientInterface.close();
       } // End if
+      else
+        harness.connected(false);
     } // End if
+    else
+      harness.connected(false);
 
   } // End ‘SimSigClient(String, int, int, String, Harness)’ Constructor
 
