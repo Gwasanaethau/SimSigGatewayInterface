@@ -128,7 +128,7 @@ public class SimSigClient implements Notifier
       return null;
     } // End else
 
-    return new SimSigMessage(type, parameters);
+    return new SimSigMessage(type, parameters.get("area_id"), parameters);
 
   } // End ‘parseMessage(String)’ Method
 
