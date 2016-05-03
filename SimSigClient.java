@@ -15,7 +15,7 @@ import java.util.HashMap;
  * Interface Gateway</a>.
  *
  * @author Mark David Pokorny
- * @version Dé Lúain, 2ú Bealtaine 2016
+ * @version Dé Máirt, 3ú Bealtaine 2016
  * @since Déardaoin, 21ú Aibreán 2016
  */
 public class SimSigClient implements Notifier
@@ -45,12 +45,6 @@ public class SimSigClient implements Notifier
       {
         clientInterface.subscribe("/topic/TD_ALL_SIG_AREA", true);
         harness.connected(true);
-        // SimSig loader 4.5.9 doesn’t send a RECEIPT for UNSUBSCRIBE (it should!)
-        clientInterface.unsubscribe(false);
-        // SimSig loader 4.5.9 complains about an access violation when
-        // receiving a DISCONNECT frame. Not much can be done about it at the mo.
-        clientInterface.disconnect();
-        clientInterface.close();
       } // End if
       else
         harness.connected(false);
@@ -59,6 +53,21 @@ public class SimSigClient implements Notifier
       harness.connected(false);
 
   } // End ‘SimSigClient(String, int, int, String, Harness)’ Constructor
+
+// ------------------------------------------ SimSigClient Class ---------------
+
+  /**
+   * Shuts down this <code>SimSigClient</code> and the underlying interface.
+   */
+  public void close()
+  {
+    // SimSig loader 4.5.9 doesn’t send a RECEIPT for UNSUBSCRIBE (it should!)
+    clientInterface.unsubscribe(false);
+    // SimSig loader 4.5.9 complains about an access violation when
+    // receiving a DISCONNECT frame. Not much can be done about it at the mo.
+    clientInterface.disconnect();
+    clientInterface.close();
+  } // End ‘close()’ Method
 
 // ------------------------------------------ SimSigClient Class ---------------
 
