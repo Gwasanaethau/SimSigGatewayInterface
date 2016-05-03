@@ -25,6 +25,7 @@ public class SimSigClient implements Notifier
 
   private ClientInterface clientInterface;
   private Harness harness;
+  private boolean connected;
 
 // ------------------------------------------ SimSigClient Class ---------------
 
@@ -37,6 +38,7 @@ public class SimSigClient implements Notifier
   {
 
     this.harness = harness;
+    connected = false;
     clientInterface = new ClientInterface(address, port, debug, this);
 
     if (clientInterface.handshake())
@@ -44,13 +46,11 @@ public class SimSigClient implements Notifier
       if (clientInterface.connect(stompHostName))
       {
         clientInterface.subscribe("/topic/TD_ALL_SIG_AREA", true);
-        harness.connected(true);
+        connected = true;
       } // End if
-      else
-        harness.connected(false);
     } // End if
-    else
-      harness.connected(false);
+
+    harness.connected(connected);
 
   } // End ‘SimSigClient(String, int, int, String, Harness)’ Constructor
 
@@ -61,12 +61,15 @@ public class SimSigClient implements Notifier
    */
   public void close()
   {
-    // SimSig loader 4.5.9 doesn’t send a RECEIPT for UNSUBSCRIBE (it should!)
-    clientInterface.unsubscribe(false);
-    // SimSig loader 4.5.9 complains about an access violation when
-    // receiving a DISCONNECT frame. Not much can be done about it at the mo.
-    clientInterface.disconnect();
-    clientInterface.close();
+    if (connected)
+    {
+      // SimSig loader 4.5.9 doesn’t send a RECEIPT for UNSUBSCRIBE (it should!)
+      clientInterface.unsubscribe(false);
+      // SimSig loader 4.5.9 complains about an access violation when
+      // receiving a DISCONNECT frame. Not much can be done about it at the mo.
+      clientInterface.disconnect();
+      clientInterface.close();
+    } // End if
   } // End ‘close()’ Method
 
 // ------------------------------------------ SimSigClient Class ---------------
