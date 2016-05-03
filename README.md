@@ -1,6 +1,6 @@
 # SimSig Gateway Interface #
 
-The SimSig Gateway Interface is a Java programme that interfaces with a [SimSig](www.simsig.co.uk) [Gateway Interface](http://www.simsig.co.uk/dokuwiki/doku.php?id=usertrack:interface_gateway), extracting the signalling messages that are sent. These can then be used for a variety of things such as ‘live’ railway maps, and so on…
+The SimSig Gateway Interface is a Java programme that interfaces with a [SimSig](www.simsig.co.uk) [Interface Gateway](http://www.simsig.co.uk/dokuwiki/doku.php?id=usertrack:interface_gateway), extracting the signalling messages that are sent. These can then be used for a variety of things such as ‘live’ railway maps, and so on…
 
 ### Requirements ###
 
